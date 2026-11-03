@@ -6,3 +6,21 @@ INSERT INTO menuitem VALUES (1, 'Water', 'Fountain Drink', 0), (2, 'Lemonade', '
 
 INSERT INTO allergen (allergenType) VALUES ('Gluten'), ('Soy'), ('Dairy');
 INSERT INTO mealperiod VALUES ('Breakfast'), ('Lunch'), ('Dinner');
+
+INSERT INTO menuitemallergen
+SELECT m.menuItemId, a.allergenId
+FROM menuitem m
+JOIN allergen a
+WHERE m.itemName = "Pepperoni Pizza" AND a.allergenType = 'Dairy';
+
+INSERT INTO menuitemallergen
+SELECT m.menuItemId, a.allergenId
+FROM menuitem m
+JOIN allergen a
+WHERE m.itemName = "Pepperoni Pizza" AND a.allergenType = 'Gluten';
+
+INSERT INTO menuitemallergen
+SELECT m.menuItemId, a.allergenId
+FROM menuitem m
+JOIN allergen a
+WHERE m.itemName = "Hamburger" AND a.allergenType = 'Gluten';
