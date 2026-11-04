@@ -1,4 +1,4 @@
-# databasesFinalTermProject
+# Cafeteria Review Application
 This application simulates an application to leave reviews on menu items in a cafeteria.
 The database stores these menu items and the reviews. The backend sends user information
 to the database. The frontend is an interface to get user information.
