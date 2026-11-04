@@ -11,7 +11,8 @@ You will need MySQL Workbench for this.
 4. [steps to start the backend go here]
 5. [steps to run the frontend go here]
 
-If you need to reset the database at any time, run finalProjectSetup.sql again
+If you need to reset the database at any time, run finalProjectSetup.sql again.
+mysql-connector-j-8.4.0.jar is not a file I created, but is a required driver to run the program.
 
 ## Testing the Application
 1. To run the tests in the /tests directory, [TODO]
