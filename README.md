@@ -3,7 +3,7 @@ This application simulates an application to leave reviews on menu items in a ca
 The database stores these menu items and the reviews. The backend sends user information
 to the database. The frontend is an interface to get user information.
 
-# Setting Up The Database and Application
+## Setting Up The Database and Application
 You will need MySQL Workbench for this.
 1. Open the database directory
 2. In MySQL Workbench, run the entirety of finalProjectSetup.sql
@@ -13,5 +13,5 @@ You will need MySQL Workbench for this.
 
 If you need to reset the database at any time, run finalProjectSetup.sql again
 
-# Testing the Application
+## Testing the Application
 1. To run the tests in the /tests directory, [TODO]
