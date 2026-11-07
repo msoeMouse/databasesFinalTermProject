@@ -40,11 +40,32 @@ FROM menuItem m
 JOIN menuItemAllergen mia ON mia.menuItemId = m.menuItemId
 JOIN (
 	SELECT allergenId FROM allergen WHERE allergenType = 'Soy'
+) AS s ON mia.allergenId = s.allergenId;
+
+SELECT DISTINCT m.itemName
+FROM menuItem m
+JOIN menuItemAllergen mia ON mia.menuItemId = m.menuItemId
+WHERE mia.menuItemId NOT IN (
+	SELECT m2.menuItemId
+    FROM menuItemAllergen m2
+    JOIN allergen a ON m2.allergenId = a.allergenID
+    WHERE a.allergenType = 'Dairy'
+);
+
+-- get items with soy and not dairy
+SELECT DISTINCT m.itemName
+FROM menuItem m
+JOIN menuItemAllergen mia ON mia.menuItemId = m.menuItemId
+JOIN ( -- get soy
+	SELECT allergenId FROM allergen WHERE allergenType = 'Soy'
 ) AS s ON mia.allergenId = s.allergenId
-EXCEPT (
-	SELECT allergenId FROM allergen WHERE allergenType != 'MILK'
-) AS m ON mia.allergenId = m.allergenId;
--- Need help with NOT conditions!
+WHERE mia.menuItemId NOT IN ( -- get not dairy
+	SELECT m2.menuItemId
+    FROM menuItemAllergen m2
+    JOIN allergen a ON m2.allergenId = a.allergenID
+    WHERE a.allergenType = 'Dairy'
+);
+
 
 -- ### Delete every review from an account where the item is under 40 calories ###
 SELECT * FROM review r
