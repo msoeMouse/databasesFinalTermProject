@@ -56,4 +56,25 @@ public class ReviewApp {
         }
         return rows;
     }
+
+    /**
+     * Adds a user to the program if valid
+     * @param conn connection
+     * @param email user submitted email, which must be unique
+     * @param password user submitted password
+     * @throws SQLException on a duplicate user
+     */
+    static void addUser(Connection conn, String email, String password) throws SQLException {
+        String sql = "INSERT INTO account VALUES (?, ?)";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ps.setString(2, password);
+
+            ps.execute();
+            conn.commit();
+        } catch (SQLException e) {
+            conn.rollback();
+            System.err.println("Duplicate user email");
+        }
+    }
 }
