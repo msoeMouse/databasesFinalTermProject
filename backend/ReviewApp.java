@@ -77,4 +77,21 @@ public class ReviewApp {
             System.err.println("Duplicate user email");
         }
     }
+
+    static void submitReview(Connection conn, int userId, int menuItem, Date menuDate, int rating)
+    throws SQLException {
+        String sql = "INSERT INTO review VALUES (?, ?, ?, ?)";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setInt(2, menuItem);
+            ps.setDate(3, menuDate);
+            ps.setInt(4, rating);
+
+            ps.execute();
+            conn.commit();
+        } catch (SQLException e) {
+            conn.rollback();
+            System.err.println("Cannot submit review");
+        }
+    }
 }
