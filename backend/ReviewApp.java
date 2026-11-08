@@ -78,6 +78,15 @@ public class ReviewApp {
         }
     }
 
+    /**
+     * Take the user's id and submit a review for a select menu item under their name
+     * @param conn connection
+     * @param userId get this from the logged-in user
+     * @param menuItem get this from the selected menu item
+     * @param menuDate get this from the selected menu item
+     * @param rating get this from the front-end menu
+     * @throws SQLException if the connection or review is faulty
+     */
     static void submitReview(Connection conn, int userId, int menuItem, Date menuDate, int rating)
     throws SQLException {
         String sql = "INSERT INTO review VALUES (?, ?, ?, ?)";
