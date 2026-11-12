@@ -6,15 +6,28 @@
  * Date: 11/12/2026
  */
 
-let email = document.getElementById("email")
-let password = document.getElementById("password")
+const form = document.querySelector("form");
 
-fetch('http://your-java-server.com/api/login', {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-        email: email,
-        password: password
-    })
-}).then(res => res.json())
-    .then(data => console.log(data));
+form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    try {
+        const response = await fetch("http://localhost:PORT/api/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                email: document.getElementById("email").value,
+                password: document.getElementById("password").value
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`Login failed: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log(data);
+    } catch (error) {
+        console.error("Could not log in:", error);
+    }
+});
