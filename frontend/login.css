@@ -1,0 +1,10 @@
+body {
+    display: flex;
+    justify-content: center;
+}
+
+form {
+    margin-top: 80px;
+    display: flex;
+    justify-content: center;
+}
