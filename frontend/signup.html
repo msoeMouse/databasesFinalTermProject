@@ -3,20 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <title>Sign Up</title>
+    <script src="signup.js" defer></script>
 </head>
 <body>
     <h2>Create an Account</h2>
     <form>
         <label for="email">Email</label>
         <input
-                type="text"
+                type="email"
                 id="email"
+                required
         />
         <label for="password">Password</label>
         <input
-                type="text"
+                type="password"
                 id="password"
+                required
         />
+        <button type="submit">Sign up</button>
     </form>
+    <p id="status" role="status"></p>
+    <p><a href="/login.html">Back to login</a></p>
 </body>
 </html>

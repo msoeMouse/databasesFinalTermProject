@@ -26,7 +26,8 @@ CREATE TABLE IF NOT EXISTS `cafeteriaReviewDb`.`Account` (
   `accountId` INT NOT NULL AUTO_INCREMENT,
   `email` VARCHAR(60) NOT NULL,
   `password` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`accountId`))
+  PRIMARY KEY (`accountId`),
+  UNIQUE INDEX `accountEmail_UNIQUE` (`email` ASC))
 ENGINE = InnoDB;
 
 

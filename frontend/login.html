@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Login</title>
     <link rel="stylesheet" href="login.css">
-    <script src="login.js"></script>
+    <script src="login.js" defer></script>
 </head>
 <body>
     <h1>Login</h1>
@@ -12,14 +12,19 @@
     <form>
         <label for="email">Email</label>
         <input
-                type="text"
+                type="email"
                 id="email"
+                required
         />
         <label for="password">Password</label>
         <input
-                type="text"
+                type="password"
                 id="password"
+                required
         />
+        <button type="submit">Log in</button>
     </form>
+    <p id="status" role="status"></p>
+    <p><a href="/signup.html">Create an account</a></p>
 </body>
 </html>
