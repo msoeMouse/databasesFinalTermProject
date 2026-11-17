@@ -30,9 +30,18 @@ async function getMenu() {
 
         for (let i = 0; i < items.length; i += 1) {
             const menuItem = document.createElement("div");
-            const menuItemName = document.createElement("p");
-            menuItemName.textContent = items[i].itemName;
-            menuItem.appendChild(menuItemName);
+            const name = document.createElement("p");
+            const description = document.createElement("p");
+            const calories = document.createElement("p");
+
+            name.textContent = items[i].itemName;
+            description.textContent = items[i].itemDescription;
+            calories.textContent = items[i].calories + " calories";
+
+            menuItem.appendChild(name);
+            menuItem.appendChild(description);
+            menuItem.appendChild(calories);
+
             menu.appendChild(menuItem);
         }
 
