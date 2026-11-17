@@ -237,7 +237,7 @@ public class ReviewApp {
 
         Path root = Paths.get(FRONTEND_DIR).toAbsolutePath().normalize();
         String requestedPath = exchange.getRequestURI().getPath();
-        String relativePath = "/".equals(requestedPath) ? "login.html" : requestedPath.substring(1);
+        String relativePath = "/".equals(requestedPath) ? "menu.html" : requestedPath.substring(1);
         Path file = root.resolve(relativePath).normalize();
         if (!file.startsWith(root) || !Files.isRegularFile(file)) {
             sendJson(exchange, 404, "{\"error\":\"Not found\"}");
