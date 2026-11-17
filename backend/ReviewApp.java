@@ -68,7 +68,7 @@ public class ReviewApp {
     static List<Object[]> getMenuFromDate(Connection conn, Date date) throws SQLException {
         List<Object[]> rows = new ArrayList<>();
         String sql = "SELECT m.itemName, m.itemDescription, m.calories " +
-                "FROM menuItemListing ml " +
+                "FROM cafeteriaMenuListing ml " +
                 "JOIN menuItem m ON m.menuItemId = ml.menuItemId " +
                 "WHERE ml.menuDate = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
