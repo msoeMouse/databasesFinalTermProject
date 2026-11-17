@@ -10,8 +10,11 @@
     <p><a href="/login.html">Login</a></p>
     <p><a href="/signup.html">Signup</a></p>
     <section id="main">
-        <label for="dateInput">Date</label>
-        <input id="dateInput" placeholder="YYYY-MM-DD">
+        <form onSubmit={getMenu()}>
+            <label for="dateInput">Date</label>
+            <input id="dateInput" placeholder="YYYY-MM-DD">
+            <button type="submit">Refresh</button>
+        </form>
         <div id="list">
 
         </div>

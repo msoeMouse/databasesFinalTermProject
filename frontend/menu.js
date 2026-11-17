@@ -13,7 +13,7 @@ async function getMenu() {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: new URLSearchParams({
-                //date: document.getElementById("date").value
+                date: document.getElementById("dateInput").value
             })
         });
         const data = await response.json();
