@@ -22,7 +22,7 @@ async function getMenu() {
             throw new Error(data.error || `Failed to get menu today: ${response.status}`);
         }
 
-        console.log("data: " + data);
+        console.log("data: " + JSON.stringify(data));
 
         //for each element in the response json, convert it into an element then append it
         const items = JSON.parse(data).data;

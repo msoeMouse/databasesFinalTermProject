@@ -59,36 +59,6 @@ public class ReviewApp {
     }
 
     /**
-     * On a specific date, return the whole menu as an array
-     * @param conn Connection to database
-     * @param date Date to filter by
-     * @return an array list containing each menu item served on a date
-     * @throws SQLException should the query not execute correctly
-     */
-    static List<Object[]> getMenuFromDate(Connection conn, Date date) throws SQLException {
-        List<Object[]> rows = new ArrayList<>();
-        String sql = "SELECT m.itemName, m.itemDescription, m.calories " +
-                "FROM cafeteriaMenuListing ml " +
-                "JOIN menuItem m ON m.menuItemId = ml.menuItemId " +
-                "WHERE ml.menuDate = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setDate(1, date);
-            //now add a row
-            try(ResultSet rs = ps.executeQuery()) {
-                while(rs.next()) {
-                    Object[] columns = {
-                            rs.getString(1),
-                            rs.getString(2),
-                            rs.getInt(3)
-                    };
-                    rows.add(columns);
-                }
-            }
-        }
-        return rows;
-    }
-
-    /**
      * Adds a user to the program if valid
      * @param conn connection
      * @param email user submitted email, which must be unique
@@ -192,6 +162,36 @@ public class ReviewApp {
     }
 
     /**
+     * On a specific date, return the whole menu as an array
+     * @param conn Connection to database
+     * @param date Date to filter by
+     * @return an array list containing each menu item served on a date
+     * @throws SQLException should the query not execute correctly
+     */
+    static List<Object[]> getMenuFromDate(Connection conn, Date date) throws SQLException {
+        List<Object[]> rows = new ArrayList<>();
+        String sql = "SELECT m.itemName, m.itemDescription, m.calories " +
+                "FROM cafeteriaMenuListing ml " +
+                "JOIN menuItem m ON m.menuItemId = ml.menuItemId " +
+                "WHERE ml.menuDate = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setDate(1, date);
+            //now add a row
+            try(ResultSet rs = ps.executeQuery()) {
+                while(rs.next()) {
+                    Object[] columns = {
+                            rs.getString(1),
+                            rs.getString(2),
+                            rs.getInt(3)
+                    };
+                    rows.add(columns);
+                }
+            }
+        }
+        return rows;
+    }
+
+    /**
      * When loading the page for the cafeteria menu, use a call to list the entire menu
      * @param exchange
      * @throws IOException
@@ -206,8 +206,9 @@ public class ReviewApp {
         java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
 
         try (Connection conn = connect()) {
-            getMenuFromDate(conn, sqlDate);
-            sendJson(exchange, 201, "{\"message\":\"Menu from this date retrieved\"}");
+            String toSend = JSON.stringify(getMenuFromDate(conn, sqlDate));
+            sendJson(exchange, 201, toSend);
+            //sendJson(exchange, 201, "{\"message\":\"Menu from this date retrieved\"}");
         } catch (SQLException e) {
             if (e.getSQLState() != null && e.getSQLState().startsWith("23")) {
                 sendJson(exchange, 409, "{\"error\":\"Conflict in database information\"}");
