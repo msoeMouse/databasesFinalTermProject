@@ -30,6 +30,7 @@ public class ReviewApp {
         HttpServer server = HttpServer.create(new InetSocketAddress("127.0.0.1", port), 0);
         server.createContext("/api/login", ReviewApp::handleLogin);
         server.createContext("/api/signup", ReviewApp::handleSignup);
+        server.createContext("/api/menu", ReviewApp::handleMenu);
         server.createContext("/", ReviewApp::handleFrontend);
         server.start();
         System.out.println("Application running at http://localhost:" + port);
@@ -186,6 +187,33 @@ public class ReviewApp {
             } else {
                 System.err.println("Signup request failed: " + e.getMessage());
                 sendJson(exchange, 500, "{\"error\":\"Unable to create account\"}");
+            }
+        }
+    }
+
+    /**
+     * When loading the page for the cafeteria menu, use a call to list the entire menu
+     * @param exchange
+     * @throws IOException
+     */
+    private static void handleMenu(HttpExchange exchange) throws IOException {
+        if (!requirePost(exchange, "/api/menu")) {
+            return;
+        }
+        Map<String, String> form = readForm(exchange);
+        //https://stackoverflow.com/questions/530012/how-to-convert-java-util-date-to-java-sql-date
+        java.util.Date utilDate = new java.util.Date();
+        java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+
+        try (Connection conn = connect()) {
+            getMenuFromDate(conn, sqlDate);
+            sendJson(exchange, 201, "{\"message\":\"Menu from this date retrieved\"}");
+        } catch (SQLException e) {
+            if (e.getSQLState() != null && e.getSQLState().startsWith("23")) {
+                sendJson(exchange, 409, "{\"error\":\"Conflict in database information\"}");
+            } else {
+                System.err.println("Menu request failed: " + e.getMessage());
+                sendJson(exchange, 500, "{\"error\":\"Unable to get menu from this date\"}");
             }
         }
     }
