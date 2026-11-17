@@ -25,13 +25,13 @@ async function getMenu() {
         console.log("data: " + JSON.stringify(data));
 
         //for each element in the response json, convert it into an element then append it
-        const items = JSON.parse(data).data;
-        console.log("items: " + items)
+        const items = data.data;
+        console.log("items: " + JSON.stringify(items));
 
         for (let i = 0; i < items.length; i += 1) {
             const menuItem = document.createElement("div");
             const menuItemName = document.createElement("p");
-            menuItemName.textContent = "beeze" + items[i].itemName;
+            menuItemName.textContent = items[i].itemName;
             menuItem.appendChild(menuItemName);
             menu.appendChild(menuItem);
         }

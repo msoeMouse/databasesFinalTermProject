@@ -202,13 +202,19 @@ public class ReviewApp {
         }
         Map<String, String> form = readForm(exchange);
         //https://stackoverflow.com/questions/530012/how-to-convert-java-util-date-to-java-sql-date
-        java.util.Date utilDate = new java.util.Date();
-        java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+        java.sql.Date sqlDate = java.sql.Date.valueOf(java.time.LocalDate.now());
+        if (!isBlank(form.get("date"))) {
+            try {
+                sqlDate = java.sql.Date.valueOf(form.get("date"));
+            } catch (IllegalArgumentException e) {
+                sendJson(exchange, 400, "{\"error\":\"Date must use YYYY-MM-DD format\"}");
+                return;
+            }
+        }
 
         try (Connection conn = connect()) {
-            String toSend = JSON.stringify(getMenuFromDate(conn, sqlDate));
+            String toSend = menuToJson(getMenuFromDate(conn, sqlDate));
             sendJson(exchange, 201, toSend);
-            //sendJson(exchange, 201, "{\"message\":\"Menu from this date retrieved\"}");
         } catch (SQLException e) {
             if (e.getSQLState() != null && e.getSQLState().startsWith("23")) {
                 sendJson(exchange, 409, "{\"error\":\"Conflict in database information\"}");
@@ -217,6 +223,49 @@ public class ReviewApp {
                 sendJson(exchange, 500, "{\"error\":\"Unable to get menu from this date\"}");
             }
         }
+    }
+
+    static String menuToJson(List<Object[]> menu) {
+        StringBuilder json = new StringBuilder("{\"data\":[");
+        for (int i = 0; i < menu.size(); i++) {
+            if (i > 0) {
+                json.append(',');
+            }
+            Object[] item = menu.get(i);
+            json.append("{\"itemName\":").append(jsonString(item[0]))
+                    .append(",\"itemDescription\":").append(jsonString(item[1]))
+                    .append(",\"calories\":").append(item[2])
+                    .append('}');
+        }
+        json.append("]}");
+        return json.toString();
+    }
+
+    private static String jsonString(Object value) {
+        if (value == null) {
+            return "null";
+        }
+        String text = value.toString();
+        StringBuilder escaped = new StringBuilder("\"");
+        for (int i = 0; i < text.length(); i++) {
+            char c = text.charAt(i);
+            switch (c) {
+                case '"': escaped.append("\\\""); break;
+                case '\\': escaped.append("\\\\"); break;
+                case '\b': escaped.append("\\b"); break;
+                case '\f': escaped.append("\\f"); break;
+                case '\n': escaped.append("\\n"); break;
+                case '\r': escaped.append("\\r"); break;
+                case '\t': escaped.append("\\t"); break;
+                default:
+                    if (c < 0x20) {
+                        escaped.append(String.format("\\u%04x", (int) c));
+                    } else {
+                        escaped.append(c);
+                    }
+                }
+        }
+        return escaped.append('"').toString();
     }
 
     private static boolean requirePost(HttpExchange exchange, String expectedPath) throws IOException {
