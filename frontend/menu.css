@@ -2,3 +2,11 @@ section {
     display: grid;
     justify-content: center;
 }
+
+.menuItem {
+    color: white;
+    border-color: red;
+    border-style: solid;
+    border-width: 2px;
+    background-color: darkred;
+}

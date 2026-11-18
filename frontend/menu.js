@@ -59,6 +59,8 @@ async function getMenu() {
             menuItem.appendChild(description);
             menuItem.appendChild(calories);
 
+            menuItem.className = "menuItem";
+
             menu.appendChild(menuItem);
         }
 
