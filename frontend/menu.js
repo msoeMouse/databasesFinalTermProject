@@ -50,14 +50,18 @@ async function getMenu() {
             const name = document.createElement("p");
             const description = document.createElement("p");
             const calories = document.createElement("p");
+            const reviewMe = document.createElement("a");
 
             name.textContent = items[i].itemName;
             description.textContent = items[i].itemDescription;
             calories.textContent = items[i].calories + " calories";
+            reviewMe.textContent = "Review Me!";
+            reviewMe.href = "/item_review.html";
 
             menuItem.appendChild(name);
             menuItem.appendChild(description);
             menuItem.appendChild(calories);
+            menuItem.appendChild(reviewMe);
 
             menuItem.className = "menuItem";
 
