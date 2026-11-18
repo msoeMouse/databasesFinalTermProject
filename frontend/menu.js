@@ -5,7 +5,24 @@
  * Date: 11/12/2026
  */
 
+/**
+ * Reset the menu list without refreshing the page
+ */
+function resetMenu() {
+    //https://www.geeksforgeeks.org/javascript/how-to-clear-the-content-of-a-div-using-javascript/
+    const menu = document.getElementById("list");
+    while (menu.firstChild) {
+        menu.removeChild(menu.firstChild);
+    }
+}
+
+/**
+ * Get every item in the menu list and put it on the front page
+ * @returns {Promise<void>} Promise that the fetch request is successful
+ */
 async function getMenu() {
+    resetMenu()
+
     const menu = document.getElementById("list");
 
     try {
