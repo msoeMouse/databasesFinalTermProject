@@ -32,6 +32,7 @@ public class ReviewApp {
         server.createContext("/api/signup", ReviewApp::handleSignup);
         server.createContext("/api/menu", ReviewApp::handleMenu);
         server.createContext("/api/menu-item", ReviewApp::handleItemReview);
+        server.createContext("/api/submit-review", ReviewApp::handleSubmitItemReview);
         server.createContext("/", ReviewApp::handleFrontend);
         server.start();
         System.out.println("Application running at http://localhost:" + port);
@@ -332,6 +333,36 @@ public class ReviewApp {
             } else {
                 System.err.println("Menu request failed: " + e.getMessage());
                 sendJson(exchange, 500, "{\"error\":\"Unable to get menu item\"}");
+            }
+        }
+    }
+
+    /**
+     * Allows frontend to submit to backend
+     * @param exchange
+     * @throws IOException if the connection fails
+     */
+    private static void handleSubmitItemReview(HttpExchange exchange) throws IOException {
+        if (!requirePost(exchange, "/api/submit-review")) {
+            return;
+        }
+        Map<String, String> form = readForm(exchange);
+
+        try (Connection conn = connect()) {
+            int rating = Integer.parseInt(form.get("rating"));
+            int accountId = Integer.parseInt(form.get("accountID"));
+            int menuItem = Integer.parseInt(form.get("menuItem"));
+
+            Date menuDate = java.sql.Date.valueOf(form.get("menuDate"));
+
+            submitReview(conn, accountId, menuItem, menuDate, rating);
+            sendJson(exchange, 201,  "{\"message\":\"Review submitted\"}");
+        } catch (SQLException e) {
+            if (e.getSQLState() != null && e.getSQLState().startsWith("23")) {
+                sendJson(exchange, 409, "{\"error\":\"Conflict in database information\"}");
+            } else {
+                System.err.println("Menu request failed: " + e.getMessage());
+                sendJson(exchange, 500, "{\"error\":\"Unable to submit review\"}");
             }
         }
     }
