@@ -100,6 +100,7 @@ public class ReviewApp {
     throws SQLException {
         String sql = "INSERT INTO review VALUES (?, ?, ?, ?)";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            conn.setAutoCommit(false);
             ps.setInt(1, userId);
             ps.setInt(2, menuItem);
             ps.setDate(3, menuDate);
@@ -110,6 +111,8 @@ public class ReviewApp {
         } catch (SQLException e) {
             conn.rollback();
             System.err.println("Cannot submit review");
+        } finally {
+            conn.setAutoCommit(true);
         }
     }
 
