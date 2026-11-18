@@ -299,9 +299,10 @@ public class ReviewApp {
             try(ResultSet rs = ps.executeQuery()) {
                 while(rs.next()) {
                     Object[] columns = {
-                            rs.getString(1),
+                            rs.getInt(1),
                             rs.getString(2),
-                            rs.getInt(3)
+                            rs.getString(3),
+                            rs.getInt(4)
                     };
                     rows.add(columns);
                 }

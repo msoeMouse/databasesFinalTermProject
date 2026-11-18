@@ -25,10 +25,11 @@ async function getInfo() {
 
         const item = data.data;
 
-        console.error(item);
+        console.log(item);
 
-        document.getElementById("name").value = item.itemName;
-        document.getElementById("description").value = item.description;
+        document.getElementById("name").textContent = item[0].itemName;
+        document.getElementById("description").textContent = item[0].itemDescription;
+        document.getElementById("calories").textContent = item[0].calories + " calories";
 
     } catch (error) {
         console.error("Request failed: " + error.message);
