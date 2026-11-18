@@ -31,6 +31,7 @@ public class ReviewApp {
         server.createContext("/api/login", ReviewApp::handleLogin);
         server.createContext("/api/signup", ReviewApp::handleSignup);
         server.createContext("/api/menu", ReviewApp::handleMenu);
+        server.createContext("/api/menu-item", ReviewApp::handleItemReview);
         server.createContext("/", ReviewApp::handleFrontend);
         server.start();
         System.out.println("Application running at http://localhost:" + port);
@@ -226,6 +227,11 @@ public class ReviewApp {
         }
     }
 
+    /**
+     * Convert an item on the menu screen to json
+     * @param menu item in the object list
+     * @return a json string
+     */
     static String menuToJson(List<Object[]> menu) {
         StringBuilder json = new StringBuilder("{\"data\":[");
         for (int i = 0; i < menu.size(); i++) {
@@ -243,6 +249,11 @@ public class ReviewApp {
         return json.toString();
     }
 
+    /**
+     * Convert an object into a jsonString
+     * @param value object to convert
+     * @return string to output
+     */
     private static String jsonString(Object value) {
         if (value == null) {
             return "null";
@@ -268,6 +279,60 @@ public class ReviewApp {
                 }
         }
         return escaped.append('"').toString();
+    }
+
+    /**
+     * Get a menu item from an id
+     * @param conn Connection to database
+     * @param id menu item id from the database
+     * @return an array list containing each menu item served on a date
+     * @throws SQLException should the query not execute correctly
+     */
+    static List<Object[]> getMenuItem(Connection conn, int id) throws SQLException {
+        List<Object[]> rows = new ArrayList<>();
+        String sql = "SELECT menuItemId, itemName, itemDescription, calories " +
+                "FROM menuItem " +
+                "WHERE menuItemId = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            //now add a row
+            try(ResultSet rs = ps.executeQuery()) {
+                while(rs.next()) {
+                    Object[] columns = {
+                            rs.getString(1),
+                            rs.getString(2),
+                            rs.getInt(3)
+                    };
+                    rows.add(columns);
+                }
+            }
+        }
+        return rows;
+    }
+
+    /**
+     * Get the menu item information on screen
+     * @param exchange
+     * @throws IOException if the connection fails
+     */
+    private static void handleItemReview(HttpExchange exchange) throws IOException {
+        if (!requirePost(exchange, "/api/menu-item")) {
+            return;
+        }
+        Map<String, String> form = readForm(exchange);
+
+        try (Connection conn = connect()) {
+            int id = Integer.parseInt(form.get("menuItem"));
+            String toSend = menuToJson(getMenuItem(conn, id));
+            sendJson(exchange, 201, toSend);
+        } catch (SQLException e) {
+            if (e.getSQLState() != null && e.getSQLState().startsWith("23")) {
+                sendJson(exchange, 409, "{\"error\":\"Conflict in database information\"}");
+            } else {
+                System.err.println("Menu request failed: " + e.getMessage());
+                sendJson(exchange, 500, "{\"error\":\"Unable to get menu item\"}");
+            }
+        }
     }
 
     private static boolean requirePost(HttpExchange exchange, String expectedPath) throws IOException {

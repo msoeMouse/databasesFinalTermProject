@@ -56,8 +56,8 @@ async function getMenu() {
             description.textContent = items[i].itemDescription;
             calories.textContent = items[i].calories + " calories";
             reviewMe.textContent = "Review Me!";
-            reviewMe.href = "/item_review.html?itemid=" + items[i].itemId;
-            //+ "&date=" + items[i].date;
+            reviewMe.href = "/item_review.html?itemid=" + items[i].itemId
+            + "&date=" + document.getElementById("dateInput").value;
 
             menuItem.appendChild(name);
             menuItem.appendChild(description);

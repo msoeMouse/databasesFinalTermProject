@@ -8,6 +8,33 @@
 let menuItemId;
 let date;
 
+async function getInfo() {
+    try {
+        const response = await fetch("/api/menu-item", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({
+                menuItem: 1
+            })
+        });
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || `Failed to submit review: ${response.status}`);
+        }
+
+        const item = data.data;
+
+        console.error(item);
+
+        document.getElementById("name").value = item.itemName;
+        document.getElementById("description").value = item.description;
+
+    } catch (error) {
+        console.error("Request failed: " + error.message);
+    }
+}
+
 async function submitReview(rating) {
     if (rating < 1 || rating > 5) {
         console.error("Rating is out of bounds for 1-5");
@@ -35,3 +62,5 @@ async function submitReview(rating) {
         console.error("Request failed: " + error.message);
     }
 }
+
+getInfo();
