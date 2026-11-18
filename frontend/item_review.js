@@ -5,6 +5,9 @@
  * Date: 11/17/2026
  */
 
+let menuItemId;
+let date;
+
 async function submitReview(rating) {
     if (rating < 1 || rating > 5) {
         console.error("Rating is out of bounds for 1-5");
@@ -17,7 +20,7 @@ async function submitReview(rating) {
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: new URLSearchParams({
                 rating: rating,
-                accountID: 1,
+                accountID: 1, //TODO: get user accountID when you click on this page
                 menuItem: 1,
                 menuDate: "2026-11-17",
             })

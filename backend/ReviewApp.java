@@ -170,7 +170,7 @@ public class ReviewApp {
      */
     static List<Object[]> getMenuFromDate(Connection conn, Date date) throws SQLException {
         List<Object[]> rows = new ArrayList<>();
-        String sql = "SELECT m.itemName, m.itemDescription, m.calories " +
+        String sql = "SELECT m.menuItemId, m.itemName, m.itemDescription, m.calories " +
                 "FROM cafeteriaMenuListing ml " +
                 "JOIN menuItem m ON m.menuItemId = ml.menuItemId " +
                 "WHERE ml.menuDate = ?";
@@ -180,9 +180,10 @@ public class ReviewApp {
             try(ResultSet rs = ps.executeQuery()) {
                 while(rs.next()) {
                     Object[] columns = {
-                            rs.getString(1),
+                            rs.getInt(1),
                             rs.getString(2),
-                            rs.getInt(3)
+                            rs.getString(3),
+                            rs.getInt(4)
                     };
                     rows.add(columns);
                 }
@@ -232,9 +233,10 @@ public class ReviewApp {
                 json.append(',');
             }
             Object[] item = menu.get(i);
-            json.append("{\"itemName\":").append(jsonString(item[0]))
-                    .append(",\"itemDescription\":").append(jsonString(item[1]))
-                    .append(",\"calories\":").append(item[2])
+            json.append("{\"itemId\":").append(jsonString(item[0]))
+                    .append(",\"itemName\":").append(jsonString(item[1]))
+                    .append(",\"itemDescription\":").append(jsonString(item[2]))
+                    .append(",\"calories\":").append(item[3])
                     .append('}');
         }
         json.append("]}");
