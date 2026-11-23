@@ -11,10 +11,14 @@ let header = document.getElementById("header")
 
 if (sessionStorage.getItem("accountId")) {
     let accountName = document.createElement("p");
-    accountName.setAttribute("value", sessionStorage.getItem("email"));
+    accountName.textContent = sessionStorage.getItem("accountEmail");
 
-    let logout = document.createElement("p");
-    logout.textContent = "Log Out Button";
+    let logout = document.createElement("button");
+    logout.textContent = "Log Out";
+    logout.onclick = () => {
+        sessionStorage.removeItem("accountId");
+        sessionStorage.removeItem("accountEmail");
+    }
 
     header.appendChild(accountName);
     header.appendChild(logout);
