@@ -409,6 +409,11 @@ public class ReviewApp {
         return form;
     }
 
+    /**
+     * Gets main page requests
+     * @param exchange HTTP request
+     * @throws IOException if the path to the request is not found
+     */
     private static void handleFrontend(HttpExchange exchange) throws IOException {
         if (!"GET".equals(exchange.getRequestMethod())) {
             sendJson(exchange, 405, "{\"error\":\"Method not allowed\"}");
