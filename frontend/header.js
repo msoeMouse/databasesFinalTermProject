@@ -18,6 +18,7 @@ if (sessionStorage.getItem("accountId")) {
     logout.onclick = () => {
         sessionStorage.removeItem("accountId");
         sessionStorage.removeItem("accountEmail");
+        location.reload();
     }
 
     header.appendChild(accountName);
