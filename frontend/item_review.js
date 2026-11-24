@@ -5,8 +5,17 @@
  * Date: 11/17/2026
  */
 
-let menuItemId;
-let date;
+//from Bing AI search
+const url = window.location.href;
+const start = url.indexOf("?");
+const separator = url.indexOf("&");
+
+let menuItemId = (start !== -1 && separator !== -1) ?
+    url.substring(start + 8, separator) : "";
+let date = url.substring(separator + 6);
+
+console.log(menuItemId);
+console.log(date);
 
 async function getInfo() {
     try {
@@ -14,7 +23,7 @@ async function getInfo() {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: new URLSearchParams({
-                menuItem: 1
+                menuItem: menuItemId
             })
         });
         const data = await response.json();
@@ -26,8 +35,6 @@ async function getInfo() {
         const item = data.data;
 
         console.log(item);
-
-        menuItemId = item[0].menuItemId;
 
         document.getElementById("name").textContent = item[0].itemName;
         document.getElementById("description").textContent = item[0].itemDescription;
@@ -41,6 +48,11 @@ async function getInfo() {
 async function submitReview(rating) {
     if (rating < 1 || rating > 5) {
         console.error("Rating is out of bounds for 1-5");
+        return;
+    }
+
+    if (!sessionStorage.getItem("accountId")) {
+        console.error("Not logged in!");
         return;
     }
 
