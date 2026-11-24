@@ -5,7 +5,7 @@
  * Date: 11/17/2026
  */
 
-//from Bing AI search
+//Bing AI search helped me get these variables from search bar
 const url = window.location.href;
 const start = url.indexOf("?");
 const separator = url.indexOf("&");
@@ -13,9 +13,31 @@ const separator = url.indexOf("&");
 let menuItemId = (start !== -1 && separator !== -1) ?
     url.substring(start + 8, separator) : "";
 let date = url.substring(separator + 6);
+//
 
-console.log(menuItemId);
-console.log(date);
+let reviewRating = 3;
+
+function createStar(rating) {
+    let star = document.createElement("img");
+    star.alt = "Star that gives a rating of " + rating;
+    star.src = (reviewRating >= rating) ? "star-selected.png" : "star-not-selected.png";
+    star.width = "60";
+    star.height = "60";
+    star.onclick = function () {
+        reviewRating = rating
+    };
+    let toAppend = document.getElementById("star-div");
+    toAppend.appendChild(star);
+}
+
+function submitReviewButton() {
+    let button = document.createAttribute("button");
+    button.onClick = submitReview(reviewRating);
+    button.textContent = "Submit Review";
+
+    let toAppend = document.getElementById("star-div");
+    toAppend.appendChild(button);
+}
 
 async function getInfo() {
     try {
@@ -78,4 +100,10 @@ async function submitReview(rating) {
     }
 }
 
+createStar(1);
+createStar(2);
+createStar(3);
+createStar(4);
+createStar(5);
 getInfo();
+submitReviewButton();
