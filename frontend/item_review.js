@@ -27,6 +27,8 @@ async function getInfo() {
 
         console.log(item);
 
+        menuItemId = item[0].menuItemId;
+
         document.getElementById("name").textContent = item[0].itemName;
         document.getElementById("description").textContent = item[0].itemDescription;
         document.getElementById("calories").textContent = item[0].calories + " calories";
@@ -48,8 +50,8 @@ async function submitReview(rating) {
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: new URLSearchParams({
                 rating: rating,
-                accountID: 1, //TODO: get user accountID when you click on this page
-                menuItem: 1,
+                accountID: sessionStorage.getItem("accountId"),
+                menuItem: menuItemId,
                 menuDate: "2026-11-17",
             })
         });
