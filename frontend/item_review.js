@@ -26,17 +26,15 @@ function createStar(rating) {
     star.onclick = function () {
         reviewRating = rating
     };
-    let toAppend = document.getElementById("star-div");
-    toAppend.appendChild(star);
+    document.getElementById("star-div").appendChild(star);
 }
 
 function submitReviewButton() {
-    let button = document.createAttribute("button");
+    let button = document.createElement("button");
     button.onClick = submitReview(reviewRating);
     button.textContent = "Submit Review";
 
-    let toAppend = document.getElementById("star-div");
-    toAppend.appendChild(button);
+    document.getElementById("star-div").appendChild(button);
 }
 
 async function getInfo() {
