@@ -62,7 +62,7 @@ public class ReviewApp {
 
     /**
      * Adds a user to the program if valid
-     * @param conn connection
+     * @param conn connection to MySQL database
      * @param email user submitted email, which must be unique
      * @param password user submitted password
      * @throws SQLException on a duplicate user
@@ -76,6 +76,14 @@ public class ReviewApp {
         }
     }
 
+    /**
+     * A query that checks for an existing account. Acts as "logging in" to the website
+     * @param conn connection to MySQL database
+     * @param email email of the account
+     * @param password password of the user. Is not unique
+     * @return the id of the existing user in the database, or -1 if this cannot be found
+     * @throws SQLException if the connection or prepared statement fails
+     */
     static int login(Connection conn, String email, String password) throws SQLException {
         String sql = "SELECT accountId FROM Account WHERE email = ? AND password = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -89,7 +97,7 @@ public class ReviewApp {
 
     /**
      * Take the user's id and submit a review for a select menu item under their name
-     * @param conn connection
+     * @param conn connection to MySQL database
      * @param userId get this from the logged-in user
      * @param menuItem get this from the selected menu item
      * @param menuDate get this from the selected menu item
