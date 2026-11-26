@@ -7,11 +7,15 @@
  * Date: 11/23/2026
  */
 
-let header = document.getElementById("header")
+let header = document.getElementById("account-header")
 
+// if logged in, display account settings. if not logged in, provide options to log in or sign up
 if (sessionStorage.getItem("accountId")) {
     let accountName = document.createElement("p");
-    accountName.textContent = sessionStorage.getItem("accountEmail");
+    accountName.textContent = ("Account: " + sessionStorage.getItem("accountEmail"));
+
+    let accountSettings = document.createElement("button");
+    accountSettings.textContent = "Account Settings";
 
     let logout = document.createElement("button");
     logout.textContent = "Log Out";
@@ -22,6 +26,7 @@ if (sessionStorage.getItem("accountId")) {
     }
 
     header.appendChild(accountName);
+    header.appendChild(accountSettings);
     header.appendChild(logout);
 } else {
     const login = document.createElement("a");

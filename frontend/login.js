@@ -30,6 +30,7 @@ form.addEventListener("submit", async (event) => {
         sessionStorage.setItem("accountId", data.accountId);
         sessionStorage.setItem("accountEmail", document.getElementById("email").value);
         status.textContent = "Login successful.";
+        window.location.href = "/";
     } catch (error) {
         status.textContent = error.message;
     }

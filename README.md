@@ -11,7 +11,7 @@ without separate CORS configuration.
 1. In MySQL Workbench, run `database/finalProjectSetup.sql`, then
    `database/sample_data.sql`.
 2. From PowerShell at the repository root, set the database password for the
-   current terminal (replace the value with your MySQL password):
+   current terminal (replace the value with your MySQL password, keeping quotation marks):
 
    ```powershell
    $env:DB_PASSWORD = "your-mysql-password"
