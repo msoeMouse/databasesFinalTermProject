@@ -33,6 +33,7 @@ public class ReviewApp {
         server.createContext("/api/menu", ReviewApp::handleMenu);
         server.createContext("/api/menu-item", ReviewApp::handleItemReview);
         server.createContext("/api/submit-review", ReviewApp::handleSubmitItemReview);
+        //server.createContext("/api/account-settings", ReviewApp::getAccountFromId);
         server.createContext("/", ReviewApp::handleFrontend);
         server.start();
         System.out.println("Application running at http://localhost:" + port);
@@ -93,6 +94,29 @@ public class ReviewApp {
                 return rs.next() ? rs.getInt("accountId") : -1;
             }
         }
+    }
+
+    /**
+     * Inverse of login: Get an account from an ID
+     * @param conn connection to MySQL database
+     * @param id internal id of the user in the database
+     * @return an object with the email and password of the user
+     * @throws SQLException if the connection or prepared statement fails
+     */
+    static Object[] getAccountFromId(Connection conn, int id) throws SQLException {
+        String sql = "SELECT email, password FROM Account WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new Object[] { //return email and password
+                            rs.getString(1),
+                            rs.getString(2)
+                    };
+                }
+            }
+        }
+        return null;
     }
 
     /**
