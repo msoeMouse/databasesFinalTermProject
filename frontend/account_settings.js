@@ -23,9 +23,8 @@ async function getAccount(){
             console.error("Error with api request: " + response.statusText);
 
         } else {
-            const item = data.data;
-            document.getElementById("changeEmail").value = item[0].email;
-            document.getElementById("changePassword").value = item[0].password;
+            document.getElementById("changeEmail").value = data.email;
+            document.getElementById("changePassword").value = data.password;
         }
     } catch (error) {
         console.error("Cannot request account information: " + error.message);
