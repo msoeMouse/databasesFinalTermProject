@@ -16,6 +16,9 @@ if (sessionStorage.getItem("accountId")) {
 
     let accountSettings = document.createElement("button");
     accountSettings.textContent = "Account Settings";
+    accountSettings.onclick = () => {
+        location.href = "/account_settings.html"
+    }
 
     let logout = document.createElement("button");
     logout.textContent = "Log Out";

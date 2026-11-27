@@ -33,7 +33,7 @@ public class ReviewApp {
         server.createContext("/api/menu", ReviewApp::handleMenu);
         server.createContext("/api/menu-item", ReviewApp::handleItemReview);
         server.createContext("/api/submit-review", ReviewApp::handleSubmitItemReview);
-        //server.createContext("/api/account-settings", ReviewApp::getAccountFromId);
+        server.createContext("/api/account-settings", ReviewApp::handleLoadAccountSettings);
         server.createContext("/", ReviewApp::handleFrontend);
         server.start();
         System.out.println("Application running at http://localhost:" + port);
@@ -104,7 +104,7 @@ public class ReviewApp {
      * @throws SQLException if the connection or prepared statement fails
      */
     static Object[] getAccountFromId(Connection conn, int id) throws SQLException {
-        String sql = "SELECT email, password FROM Account WHERE id = ?";
+        String sql = "SELECT email, password FROM Account WHERE accountId = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
@@ -398,6 +398,33 @@ public class ReviewApp {
             } else {
                 System.err.println("Menu request failed: " + e.getMessage());
                 sendJson(exchange, 500, "{\"error\":\"Unable to submit review\"}");
+            }
+        }
+    }
+
+    /**
+     * When opening the account settings menu, call a query to get account information as default values
+     * @param exchange Exchange of information over Http
+     * @throws IOException if the connection fails
+     */
+    private static void handleLoadAccountSettings(HttpExchange exchange) throws IOException {
+        if (!requirePost(exchange, "/api/account-settings")) {
+            return;
+        }
+        Map<String, String> form = readForm(exchange);
+
+        try (Connection conn = connect()) {
+            int id = Integer.parseInt(form.get("id"));
+            Object[] getAccount = getAccountFromId(conn, id);
+            assert getAccount != null;
+            String toSend = "{\"email\": \"" + getAccount[0] + "\", \"password\":\"" + getAccount[1] + "\"}";
+            sendJson(exchange, 201, toSend);
+        } catch (SQLException e) {
+            if (e.getSQLState() != null && e.getSQLState().startsWith("23")) {
+                sendJson(exchange, 409, "{\"error\":\"Conflict in database information\"}");
+            } else {
+                System.err.println("Request for account settings failed: " + e.getMessage());
+                sendJson(exchange, 500, "{\"error\":\"Unable to get menu item\"}");
             }
         }
     }
