@@ -32,10 +32,12 @@ async function getAccount(){
 }
 
 if (sessionStorage.getItem("accountId")) {
-    //TODO get values from database
     getAccount();
 
 } else {
     //TODO: remove child elements and display a message if you aren't logged in
-    document.body.remove();
+    document.getElementById("settings").remove();
+    const warning = document.createElement("h2");
+    warning.textContent = "Please log in to change account settings!";
+    document.body.appendChild(warning);
 }
