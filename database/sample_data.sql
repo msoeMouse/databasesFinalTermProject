@@ -4,7 +4,7 @@ INSERT INTO account (email, password) VALUES ('jak@msoe.edu', 'SeventyB'), ('chi
 
 INSERT INTO menuitem VALUES (1, 'Water', 'Fountain Drink', 0), (2, 'Lemonade', 'Fountain Drink', 20),
 (3, 'Soda', 'Fountain Drink', 60), (4, 'Hamburger', 'Angus Beef Patty between wheat buns', 250),
-(5, 'Pepperoni Pizza', 'Slice of classic Italian cuisine', 120);
+(5, 'Pepperoni Pizza', 'Slice of classic Italian cuisine', 120), (6, 'Pancakes', 'Slices of buttermilk wheat.', 80);
 
 
 INSERT INTO allergen (allergenType) VALUES ('Gluten'), ('Soy'), ('Dairy');
@@ -31,6 +31,15 @@ FROM menuitem m
 JOIN allergen a
 WHERE m.itemName = "Hamburger" AND a.allergenType = 'Gluten';
 
+INSERT INTO menuItemAllergen
+SELECT m.menuItemId, a.allergenId
+FROM menuitem m
+JOIN allergen a
+WHERE m.itemName = "Pancakes" AND a.allergenType = 'Gluten';
+
 
 INSERT INTO cafeteriaMenuListing VALUES (1, "2026-11-17", "Lunch"),
 (2, "2026-11-17", "Lunch");
+
+INSERT INTO cafeteriaMenuListing VALUES (1, "2026-11-27", "Lunch"),
+(2, "2026-11-27", "Lunch"), (4, "2026-11-27", "Dinner"), (5, "2026-11-27", "Lunch"), (6, "2026-11-27", "Breakfast");
