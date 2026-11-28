@@ -1,0 +1,139 @@
+
+/**
+ * File: item_review.js
+ * Brief: Submit a review of the item currently onscreen
+ * Author: Jack Brickl
+ * Date: 11/17/2026
+ */
+
+// Get URL parameters
+const url = new URL(window.location.href);
+
+let menuItemId = url.searchParams.get("menuItem") || "";
+let dateToUse = url.searchParams.get("date") || "";
+
+let reviewRating = 0;
+
+// Create and update the star icons
+function updateStars() {
+    const stars = document.querySelectorAll("#star-div img");
+
+    stars.forEach((star, index) => {
+        const rating = index + 1;
+
+        star.src = (reviewRating >= rating)
+            ? "star-selected.png"
+            : "star-not-selected.png";
+    });
+}
+
+// Create a star
+function createStar(rating) {
+    let star = document.createElement("img");
+
+    star.alt = "Star that gives a rating of " + rating;
+    star.src = "star-not-selected.png";
+    star.width = 60;
+    star.height = 60;
+    star.style.cursor = "pointer";
+
+    star.onclick = function () {
+        reviewRating = rating;
+        updateStars();
+
+        console.log("Selected rating:", reviewRating);
+    };
+
+    document.getElementById("star-div").appendChild(star);
+}
+
+// Create the submit review button
+function submitReviewButton() {
+    let button = document.createElement("button");
+
+    button.textContent = "Submit Review";
+
+    button.onclick = () => {
+        submitReview(reviewRating);
+    };
+
+    document.getElementById("star-div").appendChild(button);
+}
+
+// Retrieve menu item information
+async function getInfo() {
+    try {
+        const response = await fetch("/api/menu-item", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({
+                menuItem: menuItemId
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || `Failed to retrieve item: ${response.status}`);
+        }
+
+        const item = data.data;
+
+        console.log(item);
+
+        document.getElementById("name").textContent = item[0].itemName;
+        document.getElementById("description").textContent = item[0].itemDescription;
+        document.getElementById("calories").textContent =
+            item[0].calories + " calories";
+
+    } catch (error) {
+        console.error("Request failed: " + error.message);
+    }
+}
+
+// Submit the review
+async function submitReview(rating) {
+    if (rating < 1 || rating > 5) {
+        console.error("Rating is out of bounds for 1-5");
+        return;
+    }
+
+    if (!sessionStorage.getItem("accountId")) {
+        console.error("Not logged in!");
+        return;
+    }
+
+    try {
+        const response = await fetch("/api/submit-review", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({
+                rating: rating,
+                accountID: sessionStorage.getItem("accountId"),
+                menuItem: menuItemId,
+                menuDate: dateToUse,
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || `Failed to submit review: ${response.status}`);
+        }
+
+        console.log("Review submitted successfully!");
+
+    } catch (error) {
+        console.error("Request failed: " + error.message);
+    }
+}
+
+// Initialize the page
+createStar(1);
+createStar(2);
+createStar(3);
+createStar(4);
+createStar(5);
+
+getInfo();
+submitReviewButton();

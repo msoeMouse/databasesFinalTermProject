@@ -12,10 +12,22 @@ const separator = url.indexOf("&");
 
 let menuItemId = (start !== -1 && separator !== -1) ?
     url.substring(start + 8, separator) : "";
-let date = url.substring(separator + 6);
+let dateToUse = url.substring(separator + 6);
 //
 
-let reviewRating = 3;
+let reviewRating = 0;
+
+function updateStars() {
+    const stars = document.querySelectorAll("#star-div img");
+
+    stars.forEach((star, index) => {
+        const rating = index + 1;
+
+        star.src = (reviewRating >= rating)
+            ? "star-selected.png"
+            : "star-not-selected.png";
+    });
+}
 
 function createStar(rating) {
     let star = document.createElement("img");
@@ -23,15 +35,17 @@ function createStar(rating) {
     star.src = (reviewRating >= rating) ? "star-selected.png" : "star-not-selected.png";
     star.width = "60";
     star.height = "60";
+    star.style.cursor = "pointer";
     star.onclick = function () {
-        reviewRating = rating
+        reviewRating = rating;
+        updateStars();
     };
     document.getElementById("star-div").appendChild(star);
 }
 
 function submitReviewButton() {
     let button = document.createElement("button");
-    button.onClick = submitReview(reviewRating);
+    button.onclick = () => submitReview(reviewRating);
     button.textContent = "Submit Review";
 
     document.getElementById("star-div").appendChild(button);
@@ -84,7 +98,7 @@ async function submitReview(rating) {
                 rating: rating,
                 accountID: sessionStorage.getItem("accountId"),
                 menuItem: menuItemId,
-                menuDate: "2026-11-17",
+                menuDate: dateToUse,
             })
         });
         const data = await response.json();
