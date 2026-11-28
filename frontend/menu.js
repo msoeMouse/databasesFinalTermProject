@@ -50,11 +50,14 @@ async function getMenu() {
             const name = document.createElement("p");
             const description = document.createElement("p");
             const calories = document.createElement("p");
+            const allergies = document.createElement("p");
             const reviewMe = document.createElement("a");
 
             name.textContent = items[i].itemName;
             description.textContent = items[i].itemDescription;
             calories.textContent = items[i].calories + " calories";
+            allergies.textContent = "Allergen(s): " + items[i].allergies;
+
             reviewMe.textContent = "Review Me!";
             reviewMe.href = "/item_review.html?itemid=" + items[i].itemId
             + "&date=" + document.getElementById("dateInput").value;
@@ -62,6 +65,7 @@ async function getMenu() {
             menuItem.appendChild(name);
             menuItem.appendChild(description);
             menuItem.appendChild(calories);
+            menuItem.appendChild(allergies);
             menuItem.appendChild(reviewMe);
 
             menuItem.className = "menuItem";
